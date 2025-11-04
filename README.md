@@ -12,11 +12,12 @@ Tecnologias utilizadas:
 - ReportLab (para gerar o PDF)
 - Google Colab (ambiente de desenvolvimento)
 
-Como funciona:
-1. O sistema carrega um **banco de dados com procedimentos odontológicos**.
-2. Aplica a técnica de **TF-IDF** para transformar as descrições em vetores numéricos.
-3. Calcula a **similaridade do cosseno** entre o que o usuário digita e os procedimentos cadastrados.
-4. Retorna os **procedimentos mais semelhantes** com base no “ângulo” entre os vetores (quanto menor o ângulo, mais próximos os significados).
+Funcionalidades do sistema:
+Busca por procedimentos odontológicos usando similaridade de texto
+Normaliza textos (remove acentos e converte para minúsculas)
+Usa TF-IDF com stop words em português
+Retorna os 3 procedimentos mais relevantes com scores de similaridade
+Interface interativa no terminal
 
 Exemplo de uso
 ```bash
@@ -27,3 +28,11 @@ Recomendações:
 3. Profilaxia infantil
 
 Digite 'sair' para encerrar.
+
+
+
+Instruções para executar o arquivo:
+1. Salve o código em um arquivo
+2. Instale as dependências necessárias (se ainda não tiver):
+pip install scikit-learn
+3. Execute o arquivo.
