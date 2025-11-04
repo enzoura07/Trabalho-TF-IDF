@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{TF-IDF TRABALHO - Enzo Ura}
+\author{Enzo Ura}
+\date{November 2025}
+
+\maketitle
+
+\section{Introdução}
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{amsmath}
+
+\geometry{margin=2.5cm}
+
+\definecolor{lightgray}{gray}{0.95}
+
+\lstset{
+  backgroundcolor=\color{lightgray},
+  basicstyle=\ttfamily\footnotesize,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+\title{Sistema de Recomendação Odontológica com TF-IDF}
+\author{Aluno: \textbf{Enzo Shinji Sugano Ura}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+O  trabalho tem como objetivo desenvolver um sistema de recomendação de procedimentos odontológicos utilizando a técnica de \textbf{TF-IDF} (Term Frequency–Inverse Document Frequency) e a métrica de \textbf{similaridade do cosseno}. 
+
+A proposta é permitir que o usuário digite um procedimento odontológico ou uma breve descrição, e o sistema retorne os tratamentos mais semelhantes com base em um banco de dados textual. A escolha do tema visa demonstrar a aplicação prática de técnicas de mineração de texto na área da saúde.
+
+\section{Descrição do Dataset}
+O conjunto de dados é composto por 10 procedimentos odontológicos, com suas respectivas descrições resumidas:
+
+\begin{itemize}
+  \item \textbf{Limpeza dental} — remoção de placa bacteriana e tártaro, polimento e aplicação de flúor.
+  \item \textbf{Restauração dental} — tratamento para reparar dentes danificados por cáries ou fraturas.
+  \item \textbf{Extração dental} — remoção de dentes comprometidos por cáries profundas ou infecção.
+  \item \textbf{Clareamento dental} — procedimento estético para clarear o tom dos dentes.
+  \item \textbf{Canal (endodontia)} — tratamento para remover a polpa dentária infectada e selar o dente.
+  \item \textbf{Implante dentário} — colocação de pino de titânio para substituir dentes ausentes.
+  \item \textbf{Aparelho ortodôntico} — dispositivo fixo ou móvel para corrigir o alinhamento dos dentes.
+  \item \textbf{Profilaxia infantil} — limpeza preventiva em crianças para evitar cáries e gengivite.
+  \item \textbf{Raspagem periodontal} — remoção profunda de tártaro abaixo da gengiva.
+  \item \textbf{Prótese dentária} — substituição de dentes perdidos por próteses fixas ou removíveis.
+\end{itemize}
+
+\section{Metodologia}
+O sistema foi implementado em \textbf{Python} utilizando a biblioteca \texttt{scikit-learn}. Cada descrição textual é convertida em um vetor numérico com base no modelo \textbf{TF-IDF}.
+
+\subsection{Cálculo do TF-IDF}
+O TF-IDF mede a relevância de uma palavra dentro de um documento e em relação ao conjunto total de documentos.  
+A fórmula geral é:
+/n
+/n
+\[
+TFIDF(t, d) = TF(t, d) \times IDF(t)
+\]
+
+onde:
+
+\begin{itemize}
+  \item $TF(t, d)$ é a frequência do termo $t$ no documento $d$.
+  \item $IDF(t) = \log(\frac{N}{DF(t)})$, sendo $N$ o número total de documentos e $DF(t)$ a quantidade de documentos que contêm o termo $t$.
+\end{itemize}
+
+Com isso, palavras comuns (como “de”, “o”, “para”) têm peso reduzido, enquanto termos específicos (como “tártaro”, “clareamento”, “implante”) ganham mais importância.
+
+\subsection{Similaridade do Cosseno e o Ângulo entre Vetores}
+Cada documento (descrição de procedimento) é representado como um vetor de pesos TF-IDF.  
+Para medir o quanto dois procedimentos são semelhantes, calcula-se o \textbf{cosseno do ângulo} entre esses vetores:
+
+\[
+\text{Similaridade}(A, B) = \frac{A \cdot B}{\|A\| \times \|B\|}
+\]
+
+Quando o ângulo é pequeno (vetores próximos), a similaridade é alta (valor próximo de 1).  
+Quando o ângulo é grande (vetores distantes), a similaridade é baixa (valor próximo de 0).
+
+\section{Análise das Semelhanças e dos Ângulos}
+A análise dos ângulos mostra como o modelo identifica relações semânticas entre os procedimentos.  
+Por exemplo:
+
+\begin{itemize}
+  \item \textbf{Limpeza dental} e \textbf{Profilaxia infantil} — ambas envolvem remoção de placa e prevenção, portanto apresentam alta similaridade (ângulo pequeno, cerca de 25° a 30°).
+  \item \textbf{Raspagem periodontal} e \textbf{Limpeza dental} — possuem objetivos semelhantes, mas uma é mais profunda. Similaridade moderada (ângulo de 40° a 50°).
+  \item \textbf{Clareamento dental} e \textbf{Implante dentário} — tratam de áreas distintas (estética e cirurgia), logo o ângulo entre os vetores é grande (próximo de 80°), indicando baixa similaridade.
+  \item \textbf{Canal} e \textbf{Extração dental} — embora sejam tratamentos diferentes, ambos envolvem dentes danificados e processos de remoção de tecido, com similaridade média (ângulo de 45° a 55°).
+\end{itemize}
+
+Essas comparações mostram que o TF-IDF, mesmo sendo um método simples, consegue capturar padrões relevantes de contexto.  
+O “ângulo” funciona como uma medida geométrica de semelhança textual: quanto mais próximas as descrições, mais “paralelos” são os vetores no espaço vetorial.
+
+\section{Interação com o Usuário}
+O programa é interativo: o usuário informa o nome ou uma descrição do procedimento e o sistema retorna os três mais semelhantes.  
+Para encerrar a execução, basta digitar \texttt{sair}.
+
+\section{Código em Python}
+\begin{lstlisting}[language=Python]
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+procedimentos = {
+    "Limpeza dental": "remoção de placa bacteriana e tártaro, polimento e flúor.",
+    "Restauração dental": "tratamento para reparar dentes danificados.",
+    "Extração dental": "remoção de dentes comprometidos por cáries profundas.",
+    "Clareamento dental": "clarear o tom dos dentes com agentes clareadores.",
+    "Canal (endodontia)": "remoção da polpa dentária infectada e selamento.",
+    "Implante dentário": "colocação de pino de titânio para substituir dentes ausentes.",
+    "Aparelho ortodôntico": "uso de dispositivo fixo ou móvel para corrigir dentes.",
+    "Profilaxia infantil": "limpeza preventiva em crianças para evitar cáries.",
+    "Raspagem periodontal": "remoção profunda de tártaro abaixo da gengiva.",
+    "Prótese dentária": "substituição de dentes perdidos por próteses."
+}
+
+nomes = list(procedimentos.keys())
+descricoes = list(procedimentos.values())
+
+vetorizador = TfidfVectorizer()
+matriz_tfidf = vetorizador.fit_transform(descricoes)
+
+print("=== Sistema de Recomendação Odontológica ===")
+print("Digite um procedimento (ou 'sair' para encerrar)")
+
+while True:
+    entrada = input("Procedimento: ").strip().lower()
+    if entrada == "sair":
+        print("Encerrando o sistema...")
+        break
+
+    entrada_tfidf = vetorizador.transform([entrada])
+    similaridades = cosine_similarity(entrada_tfidf, matriz_tfidf)[0]
+    indices_ordenados = similaridades.argsort()[::-1]
+
+    print("\nMais semelhantes:")
+    for i in indices_ordenados[:3]:
+        print(f"- {nomes[i]} ({similaridades[i]:.2f})")
+\end{lstlisting}
+
+\section{Conclusão}
+O uso do TF-IDF aliado à similaridade do cosseno mostrou-se eficaz na criação de um sistema de recomendação textual simples e funcional.  
+Mesmo com um conjunto de dados pequeno, a técnica conseguiu identificar relações reais entre os procedimentos odontológicos com base na linguagem natural.
+
+A interpretação dos ângulos entre vetores reforça a importância do modelo: ângulos pequenos indicam forte correlação entre termos, enquanto ângulos grandes revelam diferenças semânticas significativas.
+
+Como aprimoramentos futuros, pode-se incluir:
+\begin{itemize}
+  \item Análise semântica com embeddings (Word2Vec, BERT);
+  \item Expansão do dataset com descrições mais detalhadas;
+  \item Interface gráfica para facilitar a interação do usuário.
+\end{itemize}
+
+\end{document}
